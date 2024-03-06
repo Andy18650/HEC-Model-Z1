@@ -1,0 +1,5 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "Omega-Mainboard-cache")(type "Legacy")(uri "${KIPRJMOD}/Omega-Mainboard-cache.lib")(options "")(descr ""))
+  (lib (name "Omega-Mainboard-rescue")(type "Legacy")(uri "${KIPRJMOD}/Omega-Mainboard-rescue.lib")(options "")(descr ""))
+)
