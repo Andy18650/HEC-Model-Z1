@@ -2,4 +2,5 @@
   (version 7)
   (lib (name "Omega-Mainboard-cache")(type "Legacy")(uri "${KIPRJMOD}/Omega-Mainboard-cache.lib")(options "")(descr ""))
   (lib (name "Omega-Mainboard-rescue")(type "Legacy")(uri "${KIPRJMOD}/Omega-Mainboard-rescue.lib")(options "")(descr ""))
+  (lib (name "New_Library")(type "KiCad")(uri "${KIPRJMOD}/New_Library.kicad_sym")(options "")(descr ""))
 )
