@@ -3646,7 +3646,7 @@
     )
   )
 
-  (symbol (lib_id "74xx:74LS32") (at 181.61 127 0) (unit 3)
+  (symbol (lib_id "74xx:74LS32") (at 181.61 127 0) (unit 3) (convert 2)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 8d2c55e0-d105-491a-91c8-d7683c1a49b4)
     (property "Reference" "U15" (at 181.61 119.38 0)
@@ -3747,7 +3747,7 @@
     )
   )
 
-  (symbol (lib_id "74xx:74LS32") (at 146.05 140.97 0) (unit 2)
+  (symbol (lib_id "74xx:74LS32") (at 146.05 140.97 0) (unit 2) (convert 2)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid a544d5d5-3853-4627-8e98-c51d6683bf09)
     (property "Reference" "U15" (at 146.05 133.35 0)
@@ -3904,7 +3904,7 @@
     )
   )
 
-  (symbol (lib_id "74xx:74LS32") (at 181.61 140.97 0) (unit 4)
+  (symbol (lib_id "74xx:74LS32") (at 181.61 140.97 0) (unit 4) (convert 2)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid d499d421-6a32-4a4d-9764-b97564b6525a)
     (property "Reference" "U15" (at 181.61 133.35 0)
@@ -4096,7 +4096,7 @@
     )
   )
 
-  (symbol (lib_id "74xx:74LS32") (at 146.05 127 0) (unit 1)
+  (symbol (lib_id "74xx:74LS32") (at 146.05 127 0) (unit 1) (convert 2)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid f5b4ce6e-f87a-480e-9f66-9f75b4a91ce6)
     (property "Reference" "U15" (at 146.05 119.38 0)
