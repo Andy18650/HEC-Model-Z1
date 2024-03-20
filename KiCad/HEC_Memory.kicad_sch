@@ -3848,7 +3848,7 @@
     (property "Value" "74LS32" (at 169.545 152.4 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" "" (at 169.545 158.115 0)
+    (property "Footprint" "Package_DIP:DIP-14_W7.62mm_Socket" (at 169.545 158.115 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "http://www.ti.com/lit/gpn/sn74LS32" (at 169.545 158.115 0)
