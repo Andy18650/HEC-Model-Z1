@@ -342,6 +342,10 @@
     [
       "2930b625-d6a3-4a7f-9d41-a454efcef99d",
       "HEC_Protection"
+    ],
+    [
+      "b96e4e19-77bb-438e-a98c-e547a5bf0bc4",
+      "HEC_Peripherals"
     ]
   ],
   "text_variables": {}
