@@ -1438,7 +1438,6 @@
     (uuid a14291b0-539e-4699-bf87-cc2540537743)
   )
 
-  (no_connect (at 52.07 86.36) (uuid 1c445fc9-68e1-4c5d-b3bc-5bae8dc60c77))
   (no_connect (at 143.51 172.72) (uuid 92f43a2e-4e35-499d-944a-a93bf669005c))
 
   (wire (pts (xy 269.24 45.72) (xy 271.78 45.72))
@@ -1716,10 +1715,6 @@
   (wire (pts (xy 182.88 71.12) (xy 185.42 71.12))
     (stroke (width 0) (type default))
     (uuid 5e3d11df-e85c-4589-a4f9-887d9f23abb4)
-  )
-  (wire (pts (xy 46.99 86.36) (xy 52.07 86.36))
-    (stroke (width 0) (type default))
-    (uuid 621a3c24-050c-4325-9a5a-113bfbd31ebb)
   )
   (wire (pts (xy 22.86 157.48) (xy 25.4 157.48))
     (stroke (width 0) (type default))
@@ -3058,10 +3053,6 @@
   (hierarchical_label "~{PAGE_H}" (shape input) (at 46.99 78.105 180) (fields_autoplaced)
     (effects (font (size 1.27 1.27)) (justify right))
     (uuid e3333891-0ba0-4bc4-abd6-c0eed30777ef)
-  )
-  (hierarchical_label "~{RD}" (shape input) (at 46.99 86.36 180) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify right))
-    (uuid e7b3581e-75a2-4cc0-a6cf-3a2e78b2793b)
   )
 
   (symbol (lib_id "power:VCC") (at 270.51 125.73 0) (unit 1)
