@@ -1,4 +1,4 @@
-8022930559614800
+8024643098010654
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -18899,6 +18899,13 @@ mini din 6pin connector socket
 0
 9
 7
+Library
+Connector_double_mini-DIN_6
+
+
+0
+0
+0
 Library
 NES_Port_Male_Horizontal
 
