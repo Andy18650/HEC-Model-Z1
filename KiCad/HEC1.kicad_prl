@@ -1,10 +1,18 @@
 {
   "board": {
-    "active_layer": 31,
+    "active_layer": 0,
     "active_layer_preset": "",
     "auto_track_width": true,
     "hidden_netclasses": [],
     "hidden_nets": [
+      "/HEC_IO/D0",
+      "/HEC_IO/D1",
+      "/HEC_IO/D2",
+      "/HEC_IO/D3",
+      "/HEC_IO/D4",
+      "/HEC_IO/D5",
+      "/HEC_IO/D6",
+      "/HEC_IO/D7",
       "L",
       "H"
     ],
@@ -66,7 +74,7 @@
       39,
       40
     ],
-    "visible_layers": "80013ff_ffffffff",
+    "visible_layers": "80433ff_ffffffff",
     "zone_display_mode": 0
   },
   "meta": {
