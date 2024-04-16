@@ -6727,7 +6727,7 @@
     (property "Value" "LM79M05_TO220" (at 248.285 52.07 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" "Package_TO_SOT_THT:TO-92_Inline" (at 248.285 50.165 0)
+    (property "Footprint" "Package_TO_SOT_THT:TO-220-3_Vertical" (at 248.285 50.165 0)
       (effects (font (size 1.27 1.27) italic) hide)
     )
     (property "Datasheet" "https://www.onsemi.com/pub/Collateral/MC79M00-D.PDF" (at 248.285 45.085 0)

@@ -1,4 +1,4 @@
-8038351032109228
+8038351032826824
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -18942,21 +18942,21 @@ THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket
 28
 28
 Library
-DIP-28_W15.24mm_Socket
+DIP-28_W15.24mm_Socket_ThinPads
 28-lead though-hole mounted DIP package, row spacing 15.24 mm (600 mils), Socket
 THT DIP DIL PDIP 2.54mm 15.24mm 600mil Socket
 0
 28
 28
 Library
-DIP-32_W15.24mm_Socket
+DIP-32_W15.24mm_Socket_ThinPads
 32-lead though-hole mounted DIP package, row spacing 15.24 mm (600 mils), Socket
 THT DIP DIL PDIP 2.54mm 15.24mm 600mil Socket
 0
 32
 32
 Library
-DIP-40_W15.24mm_Socket
+DIP-40_W15.24mm_Socket_ThinPads
 40-lead though-hole mounted DIP package, row spacing 15.24 mm (600 mils), Socket
 THT DIP DIL PDIP 2.54mm 15.24mm 600mil Socket
 0
