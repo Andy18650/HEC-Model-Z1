@@ -16,10 +16,25 @@ ATARI .equ 0x60
     .org 0x0028
     .org 0x0030
     .org 0x0038
-    jp testflash
+    ; jp testflash
     .org 0x0066
     jp ROMNMI
-
+testflash:
+    ld a,0xff
+    ld i,a
+    ld e,0x10
+loop1:
+    djnz loop1
+    dec e
+    jr nz,loop1
+    ld a,0xf8
+    ld i,a
+    ld e,0x10
+loop2:
+    djnz loop2
+    dec e
+    jr nz,loop2
+    jp testflash
 
 
 
@@ -85,28 +100,14 @@ bit1z:
     ld i,a
     in a,(0xf0)
     out (0xf0),a
-    rst 8
-    call calltest
-    call calltest
-    call calltest
-    call calltest
-    call calltest
-testflash:
-    ld a,0xff
-    ld i,a
-    ld e,0x10
-loop1:
-    djnz loop1
-    dec e
-    jr nz,loop1
-    ld a,0xf8
-    ld i,a
-    ld e,0x10
-loop2:
-    djnz loop2
-    dec e
-    jr nz,loop2
-    jp testflash
+    ; rst 8
+    ; call calltest
+    ; call calltest
+    ; call calltest
+    ; call calltest
+    ; call calltest
+    jp readatari
+
 
 nmitriggered:
     ld d,5
@@ -126,7 +127,7 @@ loop4:
     jr nz,loop4
     dec d
     ; jp nz,nmitriggered
-    jp nmiexit
+    jp nmitriggered
 
 ROMNMI:
     jp RAMinit
@@ -147,3 +148,7 @@ loop6:
     dec e
     jr nz,loop6
     ret
+
+    .blkw 0x3000,0xffff
+
+    .org 0x8000

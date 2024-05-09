@@ -1,1 +1,1 @@
-python "EPROM_NG_v2.0rc3.py" -mem 27256 -spi n -auto y %1 com11
+python "EPROM_NG_v2.0rc3.py" -mem 27256 -spi y -auto y %1 com11
