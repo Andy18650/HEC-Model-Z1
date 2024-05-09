@@ -1,0 +1,1 @@
+vasmz80_oldstyle.exe -dotdir -Fbin ..\Test\Test1.z80 -o test.bin
