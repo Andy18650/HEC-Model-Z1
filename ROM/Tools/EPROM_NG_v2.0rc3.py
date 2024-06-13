@@ -24,7 +24,7 @@ version = "2.0rc3"
 import argparse
 import serial,os
 import time
-import PySimpleGUI as sg
+#import PySimpleGUI as sg
 import sys
 
 # All routines here
@@ -211,23 +211,23 @@ def ParseIntelLine(line):
 		buff64k[x+address] = bytes[x]
 # -----------------------------------------------------------------------
 
-sg.theme('DarkAmber')   # Add a touch of color
+# sg.theme('DarkAmber')   # Add a touch of color
 
 
 
-form = sg.FlexForm('Eprom emulator Uploader 2.0')
-from serial.tools.list_ports import comports
-com = [p.device for p in comports()]
+# form = sg.FlexForm('Eprom emulator Uploader 2.0')
+# from serial.tools.list_ports import comports
+# com = [p.device for p in comports()]
 
-layout = [  [sg.Text('Eprom Type'), sg.InputCombo(('2716', '2732','2764', '27128','27256', '27512'),sg.user_settings_get_entry('mem',''), key='mem', size=(10, 6))],		
-			[sg.Text('COM port   '), sg.InputCombo(com,sg.user_settings_get_entry('port',''),key='port',size=(10, 1))],														
-			[sg.Checkbox('Save to SPI',sg.user_settings_get_entry('spi',False),key='spi'),sg.Checkbox('Show Data Map',sg.user_settings_get_entry('map',True),key='map')],																	
-			[sg.Checkbox('Auto Start',sg.user_settings_get_entry('auto',False),key='auto')],																		
-			[sg.Text('Start Address (for binary files)'),sg.Input(sg.user_settings_get_entry('startaddress',"0x0000"), key='startaddress', size=(10,1))],									# 4	
-			[sg.Text('Choose A File', size=(35, 1))],																		
-			[sg.In(sg.user_settings_get_entry('filename', ''),key='filename'),sg.FileBrowse(file_types=(("iHex files", "*.hex"),("Binary","*.bin"),("Image","*.img"),("All files","*.*")))],													# 6
-			[sg.Submit(), sg.Cancel()],
-			]
+# layout = [  [sg.Text('Eprom Type'), sg.InputCombo(('2716', '2732','2764', '27128','27256', '27512'),sg.user_settings_get_entry('mem',''), key='mem', size=(10, 6))],		
+# 			[sg.Text('COM port   '), sg.InputCombo(com,sg.user_settings_get_entry('port',''),key='port',size=(10, 1))],														
+# 			[sg.Checkbox('Save to SPI',sg.user_settings_get_entry('spi',False),key='spi'),sg.Checkbox('Show Data Map',sg.user_settings_get_entry('map',True),key='map')],																	
+# 			[sg.Checkbox('Auto Start',sg.user_settings_get_entry('auto',False),key='auto')],																		
+# 			[sg.Text('Start Address (for binary files)'),sg.Input(sg.user_settings_get_entry('startaddress',"0x0000"), key='startaddress', size=(10,1))],									# 4	
+# 			[sg.Text('Choose A File', size=(35, 1))],																		
+# 			[sg.In(sg.user_settings_get_entry('filename', ''),key='filename'),sg.FileBrowse(file_types=(("iHex files", "*.hex"),("Binary","*.bin"),("Image","*.img"),("All files","*.*")))],													# 6
+# 			[sg.Submit(), sg.Cancel()],
+# 			]
 
 
 if len(sys.argv) >= 2:
@@ -248,44 +248,44 @@ if len(sys.argv) >= 2:
 	mapmem = args.map
 	file = args.file_arg
 	gui = False
-else:
-	window = sg.Window('EPROM EMU NG GUI Uploader '+version, layout)
-	gui = True
-# Create the Window
-# Event Loop to process "events" and get the "values" of the inputs
-	while True:
-		event, values = window.read()
-		mem = values['mem']
-		port = values['port']
-		spi = values['spi']
-		auto = values['auto']
-		startaddrstr = values['startaddress']
-		mapmem = values['map']
+# else:
+# 	window = sg.Window('EPROM EMU NG GUI Uploader '+version, layout)
+# 	gui = True
+# # Create the Window
+# # Event Loop to process "events" and get the "values" of the inputs
+# 	while True:
+# 		event, values = window.read()
+# 		mem = values['mem']
+# 		port = values['port']
+# 		spi = values['spi']
+# 		auto = values['auto']
+# 		startaddrstr = values['startaddress']
+# 		mapmem = values['map']
 
-		if values['spi']: spi="y"
-		else: spi= "n"
+# 		if values['spi']: spi="y"
+# 		else: spi= "n"
         
-		if values['auto']: auto="y"
-		else: auto = "n"
+# 		if values['auto']: auto="y"
+# 		else: auto = "n"
         
-		if values['map']: mapmem="y"
-		else: mapmem = "n"
+# 		if values['map']: mapmem="y"
+# 		else: mapmem = "n"
         
-		file = values['filename']
-		if event == sg.WIN_CLOSED or event == 'Cancel': # if user closes window or clicks cancel
-			exit()
-			break
-		if event == 'Submit': # if user closes window or clicks cancel
-			sg.user_settings_set_entry('filename', values['filename'])
-			sg.user_settings_set_entry('startaddress', values['startaddress'])
-			sg.user_settings_set_entry('mem', values['mem'])
-			sg.user_settings_set_entry('spi', values['spi'])
-			sg.user_settings_set_entry('auto', values['auto'])
-			sg.user_settings_set_entry('port', values['port'])
-			sg.user_settings_set_entry('map', values['map'])
-			break
+# 		file = values['filename']
+# 		if event == sg.WIN_CLOSED or event == 'Cancel': # if user closes window or clicks cancel
+# 			exit()
+# 			break
+# 		if event == 'Submit': # if user closes window or clicks cancel
+# 			sg.user_settings_set_entry('filename', values['filename'])
+# 			sg.user_settings_set_entry('startaddress', values['startaddress'])
+# 			sg.user_settings_set_entry('mem', values['mem'])
+# 			sg.user_settings_set_entry('spi', values['spi'])
+# 			sg.user_settings_set_entry('auto', values['auto'])
+# 			sg.user_settings_set_entry('port', values['port'])
+# 			sg.user_settings_set_entry('map', values['map'])
+# 			break
 
-	window.close()
+# 	window.close()
 
 mem_type = ""
 if mem == "2716":
