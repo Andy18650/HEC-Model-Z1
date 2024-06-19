@@ -1,21 +1,49 @@
-GOUSR .equ 0x07
-CLRINT .equ 0x03
-RAMEN .equ 0x06
-PAGEL .equ 0x00
-PAGEH .equ 0x01
+GOUSR           .equ 0x07
+CLRINT          .equ 0x03
+RAMEN           .equ 0x06
+PAGEL           .equ 0x00
+PAGEH           .equ 0x01
 
-ATARI .equ 0x60
+VERA_ADDR_L     .equ 0x20
+VERA_ADDR_M     .equ 0x21
+VERA_ADDR_H     .equ 0x22
+VERA_DATA0      .equ 0x23
+VERA_DATA1      .equ 0x24
+
+VERA_CTRL       .equ 0x25
+VERA_IEN        .equ 0x26
+VERA_ISR        .equ 0x27
+VERA_IDQLINE_L  .equ 0x28
+VERA_SCANLINE_L .equ 0x28
+
+VERA_DC_VIDEO   .equ 0x29
+VERA_DC_HSCALE  .equ 0x2a
+VERA_DC_VSCALE  .equ 0x2b
+VERA_DC_BORDER  .equ 0x2c
+
+VERA_DC_HSTART  .equ 0x29
+VERA_DC_HSTOP   .equ 0x2a
+VERA_DC_VSTART  .equ 0x2b
+VERA_DC_VSTOP   .equ 0x2c
+
+VERA_L0_CONFIG   .equ 0x2d
+VERA_L0_MAPBASE  .equ 0x2e
+VERA_L0_TILEBASE .equ 0x2f
+
+ATARI           .equ 0x60
 
     .org 0x0000
+    ; .byte 0xdb,0x60
+    ; jp 0
     jp testcode
-    .org 0x0008
-    ret
-    .org 0x0010
-    .org 0x0018
-    .org 0x0020
-    .org 0x0028
-    .org 0x0030
-    .org 0x0038
+    ; .org 0x0008
+    ; ret
+    ; .org 0x0010
+    ; .org 0x0018
+    ; .org 0x0020
+    ; .org 0x0028
+    ; .org 0x0030
+    ; .org 0x0038
     ; jp testflash
     .org 0x0066
     jp ROMNMI
@@ -42,16 +70,88 @@ loop2:
 
     .org 0x100
 testcode:
-    add 1
-    daa
+    ld a,0xff
     ld i,a
+waitvera:
+    ld a,0x24
+    out (VERA_ADDR_L),a
+    in a,(VERA_ADDR_L)
+    cp a,0x24
+    jp nz,waitvera
+
+    ld a,0b00010001
+    out (VERA_DC_VIDEO),a
+    ld a,0b01100000
+    out (VERA_L0_CONFIG),a
+    ld a,0b10000010
+    out (VERA_L0_TILEBASE),a
+    ld hl,0
+    ld bc,1
+waitvera2:
+    ld a,h
+    ld i,a
+    sbc hl,bc
+    jp nz,waitvera2
+    ld a,0x78   
+    ld i,a
+
+    ld a,0x00000000
+    out (VERA_CTRL),a
+    ld a,0
+    out (VERA_ADDR_L),a
+    ld a,0
+    out (VERA_ADDR_M),a
+    ld a,0b00010000
+    out (VERA_ADDR_H),a
+
+    ld bc,60000
+fillVRAM:
+    ld a,0x00
+    out (VERA_DATA0),a
+    ld de,0
 waitamoment:
-    djnz waitamoment
     dec d
     jp nz,waitamoment
-    jp testcode
+    dec c
+    jp nz,fillVRAM
+    dec b
+    jp nz,fillVRAM
+infiniteloop:
+    jp infiniteloop
+    ld a,0b00000111
+    out (VERA_IEN),a
+    out (VERA_CTRL),a
+    ld HL,0
+    ld e,0
+testloop:
+    inc e
+    ld a,e
+    out (VERA_DC_VIDEO),a
+    in a,(VERA_ADDR_L)
+    ; and 0x7f
+    ld i,a
+
+    jp testloop
+    in A,(ATARI)
+    bit 0,a
+    jp nz,DONOTINC
+    INC HL
+DONOTINC:
+    LD A,H
+    OUT (VERA_ADDR_M),A
+    LD A,L
+    OUT (VERA_ADDR_L),A
+    in a,(VERA_DATA0)
+    ld i,a
+    ld a,0b00000111
+    out (VERA_ISR),a
+
+    jp testloop
+
+
     out (GOUSR),a
     out (GOUSR),a
+
 RAMinit:
     ld sp,0xffff
     ld bc,0
@@ -115,7 +215,10 @@ bit1z:
     ; call calltest
     ; call calltest
     jp readatari
-
+hexatari:
+    in a,(ATARI)
+    ld i,a
+    jp hexatari
 
 nmitriggered:
     ld d,5
