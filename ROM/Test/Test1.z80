@@ -83,19 +83,40 @@ waitvera:
     out (VERA_DC_VIDEO),a
     ld a,0b01100000
     out (VERA_L0_CONFIG),a
-    ld a,0b10000010
+    ld a,0b01000010
     out (VERA_L0_TILEBASE),a
     ld hl,0
-    ld bc,1
 waitvera2:
+    dec l
+    jp nz,waitvera2
     ld a,h
     ld i,a
-    sbc hl,bc
+    dec h
     jp nz,waitvera2
-    ld a,0x78   
-    ld i,a
 
     ld a,0x00000000
+    out (VERA_CTRL),a
+    ld a,0
+    out (VERA_ADDR_L),a
+    ld a,0b10000000
+    out (VERA_ADDR_M),a
+    ld a,0b00010000
+    out (VERA_ADDR_H),a
+
+    ld bc,0x1000
+    ld hl,font
+loadfont:
+    ld a,(hl)
+    out (VERA_DATA0),a
+waitamoment2:
+    dec d
+    jp nz,waitamoment2
+    inc hl
+    dec c
+    jp nz,loadfont
+    dec b
+    jp nz,loadfont
+
     out (VERA_CTRL),a
     ld a,0
     out (VERA_ADDR_L),a
@@ -103,12 +124,10 @@ waitvera2:
     out (VERA_ADDR_M),a
     ld a,0b00010000
     out (VERA_ADDR_H),a
-
     ld bc,60000
 fillVRAM:
     ld a,0x00
     out (VERA_DATA0),a
-    ld de,0
 waitamoment:
     dec d
     jp nz,waitamoment
@@ -259,7 +278,7 @@ loop6:
     dec e
     jr nz,loop6
     ret
-
-    .blkw 0x3000,0xffff
+font:
+    .incbin "HEC1FNT.bin"
 
     .org 0x8000
