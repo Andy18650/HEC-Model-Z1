@@ -1,4 +1,4 @@
-4340597267611201
+4338878277895735
 Button_Switch_THT
 KSA_Tactile_SPST
 KSA http://www.ckswitches.com/media/1457/ksa_ksl.pdf
@@ -9883,13 +9883,6 @@ Bus_HEC_5Vonly
 0
 44
 44
-Library
-Bus_HEC_Edge
-
-
-0
-0
-0
 Library
 Connector_Mini-DIN_Female_6Pin_2rows
 A footprint for the generic 6 pin Mini-DIN through hole connector with shell.
