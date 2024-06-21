@@ -23,4 +23,5 @@
   (lib (name "Switch")(type "KiCad")(uri "${KICAD7_SYMBOL_DIR}/Switch.kicad_sym")(options "")(descr ""))
   (lib (name "Regulator_Linear")(type "KiCad")(uri "${KICAD7_SYMBOL_DIR}/Regulator_Linear.kicad_sym")(options "")(descr ""))
   (lib (name "Memory_RAM")(type "KiCad")(uri "${KICAD7_SYMBOL_DIR}/Memory_RAM.kicad_sym")(options "")(descr ""))
+  (lib (name "Transistor_FET")(type "KiCad")(uri "${KICAD7_SYMBOL_DIR}/Transistor_FET.kicad_sym")(options "")(descr ""))
 )
