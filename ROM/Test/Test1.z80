@@ -33,11 +33,22 @@ VERA_L0_CONFIG   .equ 0x2d
 VERA_L0_MAPBASE  .equ 0x2e
 VERA_L0_TILEBASE .equ 0x2f
 
+VERA_L1_CONFIG   .equ 0x34
+VERA_L1_MAPBASE  .equ 0x35
+VERA_L1_TILEBASE .equ 0x36
+
 KMI_DATA        .equ 0x40
 KMI_COMMAND     .equ 0x41
 KMI_STATUS      .equ 0x41
 
 ATARI           .equ 0x60
+
+VRAM_FONT_ADDR  .equ 0x7000
+VRAM_TEXT_ADDR  .equ 0x8000
+VRAM_TEXT_SIZE  .equ 128*64
+VRAM_L1_ADDR    .equ VRAM_TEXT_ADDR+VRAM_TEXT_SIZE*2
+
+VRAM_TILE_ADDR  .equ 0x0000
 
 NMICounter      .equ 0x8000
 
@@ -47,18 +58,20 @@ NMICounter      .equ 0x8000
 ; bit 13: NX/XE 1/0=generate interrupt on M1 cycle
 ; bit 12: RI 0=generate interrupt on read.
 
-    .org 0x0000
-
+    .org 0x0000     ;ROM reset vector, console I/O
     jp ROMreset
-    ; .org 0x0008
-    ; .org 0x0010
-    ; .org 0x0018
-    ; .org 0x0020
-    ; .org 0x0028
-    ; .org 0x0030
-    .org 0x0038
+    .org 0x0008     ;RST 0X08, keyboard/controller input
+    jp consoleHandler
+    .org 0x0010     ;RST 0X10, graphics routines
+    jp graphicsHandler
+    .org 0x0018     ;RST 0X18, audio routines
+    .org 0x0020     ;RST 0x20, file access
+    .org 0x0028     ;RST 0x28, system routines
+    .org 0x0030     ;RST 0X30, direct I/O
+    .org 0x0038     ;RST 0X38, debug
     ret
     .org 0x0066
+nmiHandler
     push af
     push bc
     push de
@@ -83,23 +96,6 @@ NMICounter      .equ 0x8000
     pop bc
     pop af
     ret
-nmitriggered:
-    ld d,5
-    ld a,0xf8
-    ld i,a
-loop3:
-    dec d
-    jr nz,loop3
-    dec e
-    jr nz,loop3
-    ld a,0x8f
-    ld i,a
-loop4:
-    dec d
-    jr nz,loop4
-    dec e
-    jr nz,loop4
-    jp nmitriggered
 
     .org 0x100
 ROMreset:
@@ -111,19 +107,29 @@ VERAinit:
     cp a,0x24
     jp nz,.waitvera
 
-    ld a,0b00010001
+    ld a,0b00110001
     out (VERA_DC_VIDEO),a
+
     ld a,0b01100000
     out (VERA_L0_CONFIG),a
-    ld a,0b01000010
+    ld a,(VRAM_FONT_ADDR>>9)|0b10
     out (VERA_L0_TILEBASE),a
+    ld a,VRAM_TEXT_ADDR>>9
+    out (VERA_L0_MAPBASE),a
+
+    ld a,0b01100010
+    out (VERA_L1_CONFIG),a
+    ld a,0
+    out (VERA_L1_TILEBASE),a
+    ld a,VRAM_L1_ADDR>>9
+    out (VERA_L1_MAPBASE),a
 
     ld a,0b00000000
     out (VERA_CTRL),a
 
-    ld a,0
+    ld a,<VRAM_FONT_ADDR
     out (VERA_ADDR_L),a
-    ld a,0b10000000
+    ld a,>VRAM_FONT_ADDR
     out (VERA_ADDR_M),a
     ld a,0b00010000
     out (VERA_ADDR_H),a
@@ -139,24 +145,39 @@ VERAinit:
     dec b
     jp nz,.loadfont
 
-    out (VERA_CTRL),a
-    ld a,0
+    ld a,<VRAM_TEXT_ADDR
     out (VERA_ADDR_L),a
-    ld a,0
+    ld a,>VRAM_TEXT_ADDR
     out (VERA_ADDR_M),a
     ld a,0b00010000
     out (VERA_ADDR_H),a
-    ld bc,16384
-    .fillVRAM:
-    ld a,0x00
+    ld bc,VRAM_TEXT_SIZE
+    .fillVRAMl0:
+    ld a,0x20
     out (VERA_DATA0),a
     ld a,0x01
     out (VERA_DATA0),a
     dec c
-    jp nz,.fillVRAM
+    jp nz,.fillVRAMl0
     dec b
-    jp nz,.fillVRAM
+    jp nz,.fillVRAMl0
 
+    ld a,<VRAM_L1_ADDR
+    out (VERA_ADDR_L),a
+    ld a,>VRAM_L1_ADDR
+    out (VERA_ADDR_M),a
+    ld a,0b00010000
+    out (VERA_ADDR_H),a
+    ld bc,VRAM_TEXT_SIZE
+    .fillVRAMl1:
+    ld a,0x00
+    out (VERA_DATA0),a
+    ld a,0x00
+    out (VERA_DATA0),a
+    dec c
+    jp nz,.fillVRAMl1
+    dec b
+    jp nz,.fillVRAMl1
 
 RAMinit:
     ld a,0b10000000         ;process number=0, SYSGATE=1
@@ -181,22 +202,52 @@ RAMinit:
     ld de,0         ;source start address
     ld hl,0         ;destination start address
     ldir            ;copy data
+    ld a,<consoleHandler
+    ld (1),a
+    ld a,>consoleHandler
+    ld (2),a
     ld sp,0xffff    ;initialize stack
     in a,(RAMEN)    ;start running in RAM
 
 initComplete:
+    out (GOUSR),a
     LD HL,MESSAGE
     LD B,10
+    ld c,1
     LD DE,0
-    CALL printString
+    rst 0x00
 
 
-    ld a,0x00
-    ld i,a
     out (CLRINT),a
-    ld a,0b00000001
+    ld a,0b00000000
     out (VERA_IEN),a
-    out (GOUSR),a
+    ; out (GOUSR),a
+
+    ld hl,tile
+    ld c,1
+    ld e,0
+    rst 0x10
+;     ld b,32
+;     ld a,0
+;     out (VERA_ADDR_L),a
+;     out (VERA_ADDR_M),a
+;     ld a,0x10
+;     out (VERA_ADDR_H),a
+; manualload:
+;     ld a,(hl)
+;     rlca
+;     rlca
+;     rlca
+;     rlca
+;     out (VERA_DATA0),a
+;     inc hl
+;     dec b
+;     jp nz,manualload
+    ld a,16
+    out (VERA_DC_HSCALE),a
+    out (VERA_DC_VSCALE),a
+
+
 infwait:
     jp infwait
 
@@ -211,7 +262,7 @@ KMITest:
     ld i,a
     in a,(KMI_DATA)
     cp 0x55
-    jp nz,nmitriggered
+    jp nz,nmiHandler
     ld a,0x60
     out (KMI_COMMAND),a
     call waitamoment
@@ -281,6 +332,7 @@ printString:            ;B=length, HL=pointer, DE=location
     sla a
     out (VERA_ADDR_L),a
     ld a,d
+    add >VRAM_TEXT_ADDR
     OUT (VERA_ADDR_M),A
     LD A,0B00100000
     OUT (VERA_ADDR_H),A
@@ -297,6 +349,7 @@ printBin:               ;A=number, DE=location
     sla a
     out (VERA_ADDR_L),a
     ld a,d
+    add >VRAM_TEXT_ADDR
     out (VERA_ADDR_M),A
     LD A,0B00100000
     OUT (VERA_ADDR_H),A
@@ -314,10 +367,67 @@ printBin:               ;A=number, DE=location
     JR NZ,.PRINTBIT
     RET
 
+consoleHandler:
+    dec c
+    jp z,printString
+    dec c
+    jp z,printBin
+    ld c,0xff
+    out (GOUSR),a
+    ret
+
+loadTile:               ;E=tile Number, HL=tile information
+    push bc
+    push de
+    push hl
+    sla e
+    rl d
+    sla e
+    rl d
+    sla e
+    rl d
+    sla e
+    rl d
+    sla e
+    rl d
+    ld a,e
+    out (VERA_ADDR_L),a
+    ld a,d
+    out (VERA_ADDR_M),a
+    ld a,0x10
+    out (VERA_ADDR_H),a
+    ld b,32
+    .loop:
+    ld a,(hl)
+    rlca
+    rlca
+    rlca
+    rlca
+    out (VERA_DATA0),a
+    inc hl
+    djnz .loop
+    pop hl
+    pop de
+    pop bc
+    ld c,00
+    and c
+    ret
+setTile:
+graphicsHandler:
+    dec c
+    jp z,loadTile
+    dec c
+    jp z,setTile
+    ld c,0xff
+    out (GOUSR),a
+    ret
+
 MESSAGE:
     .DB 'HELLO!!!!!'
 MESSAGE2:
     .DB 'MESSAGE2  '
+tile:
+    .incbin "tree.bin"
     .org 0x7000
 font:
     .incbin "HEC1FNT.bin"
