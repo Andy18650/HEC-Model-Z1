@@ -65,6 +65,9 @@ NMICounter      .equ 0x8000
     .org 0x0010     ;RST 0X10, graphics routines
     jp graphicsHandler
     .org 0x0018     ;RST 0X18, audio routines
+    rla
+    ld (console1+1),a
+    jp console.Caller
     .org 0x0020     ;RST 0x20, file access
     .org 0x0028     ;RST 0x28, system routines
     .org 0x0030     ;RST 0X30, direct I/O
@@ -81,6 +84,7 @@ nmiHandler
     ld a,(NMICounter)
     inc a
     ld (NMICounter),a
+    ld c,a
     ld de,0x0524
     call printBin
     out (CLRINT),a
@@ -97,6 +101,19 @@ nmiHandler
     pop af
     ret
 
+    .org 0x90           ;You are not expected to understand this
+console.Caller:
+    pop af
+    push hl
+console1:
+    ld hl,(consoleRoutines)
+    ld (console2+1),hl
+    pop hl
+console2:
+    call 0
+    out (GOUSR),a
+    ret
+
     .org 0x100
 ROMreset:
 VERAinit:
@@ -107,7 +124,7 @@ VERAinit:
     cp a,0x24
     jp nz,.waitvera
 
-    ld a,0b00110001
+    ld a,0b00010001
     out (VERA_DC_VIDEO),a
 
     ld a,0b01100000
@@ -213,20 +230,20 @@ initComplete:
     out (GOUSR),a
     LD HL,MESSAGE
     LD B,10
-    ld c,1
+    ld a,1
     LD DE,0
-    rst 0x00
+    rst 0x18
 
-
+    rst 0x38
     out (CLRINT),a
-    ld a,0b00000000
+    ld a,0b00000001
     out (VERA_IEN),a
-    ; out (GOUSR),a
+    out (GOUSR),a
 
     ld hl,tile
     ld c,1
     ld e,0
-    rst 0x10
+    ; rst 0x10
 ;     ld b,32
 ;     ld a,0
 ;     out (VERA_ADDR_L),a
@@ -243,10 +260,9 @@ initComplete:
 ;     inc hl
 ;     dec b
 ;     jp nz,manualload
-    ld a,16
+    ld a,128
     out (VERA_DC_HSCALE),a
     out (VERA_DC_VSCALE),a
-
 
 infwait:
     jp infwait
@@ -343,7 +359,7 @@ printString:            ;B=length, HL=pointer, DE=location
     DJNZ .OUTCHAR
     RET
 
-printBin:               ;A=number, DE=location
+printBin:               ;C=number, DE=location
     PUSH AF
     LD A,e
     sla a
@@ -354,6 +370,7 @@ printBin:               ;A=number, DE=location
     LD A,0B00100000
     OUT (VERA_ADDR_H),A
     POP AF
+    ld a,c
     LD C,VERA_DATA0
     LD D,8
     .PRINTBIT:
@@ -368,12 +385,23 @@ printBin:               ;A=number, DE=location
     RET
 
 consoleHandler:
-    dec c
-    jp z,printString
-    dec c
-    jp z,printBin
-    ld c,0xff
-    out (GOUSR),a
+    push hl
+    ld hl,sysExit
+    ex (sp),hl
+    push hl
+    push bc
+    ld b,consoleRoutines>>9
+    sla c
+    rl b
+    push af
+    ld a,(bc)
+    ld l,a
+    inc bc
+    ld a,(bc)
+    ld h,a
+    pop af
+    pop bc
+    ex (sp),hl
     ret
 
 loadTile:               ;E=tile Number, HL=tile information
@@ -422,12 +450,27 @@ graphicsHandler:
     out (GOUSR),a
     ret
 
+unknownCall:
+    ld a,0
+    dec a
+    ret
+sysExit:
+    out (GOUSR),a
+    ret
+
 MESSAGE:
     .DB 'HELLO!!!!!'
 MESSAGE2:
     .DB 'MESSAGE2  '
 tile:
     .incbin "tree.bin"
+    .org 0x6000
+jumpTable:
+consoleRoutines:
+    .addr 0
+    .addr printString
+    .addr printBin
+    .blkw (jumpTable+512-$)/2,unknownCall
     .org 0x7000
 font:
     .incbin "HEC1FNT.bin"
