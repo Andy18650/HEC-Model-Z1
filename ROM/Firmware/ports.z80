@@ -1,0 +1,49 @@
+PAGEL           .equ 0x00
+PAGEH           .equ 0x01
+PID             .equ 0x02
+CLRINT          .equ 0x03
+INT_SOURCE_1    .equ 0x04
+INT_SOURCE_2    .equ 0x05
+RAMEN           .equ 0x06
+GOUSR           .equ 0x07
+
+VERA_ADDR_L     .equ 0x20
+VERA_ADDR_M     .equ 0x21
+VERA_ADDR_H     .equ 0x22
+VERA_DATA0      .equ 0x23
+VERA_DATA1      .equ 0x24
+
+VERA_CTRL       .equ 0x25
+VERA_IEN        .equ 0x26
+VERA_ISR        .equ 0x27
+VERA_IDQLINE_L  .equ 0x28
+VERA_SCANLINE_L .equ 0x28
+
+VERA_DC_VIDEO   .equ 0x29
+VERA_DC_HSCALE  .equ 0x2a
+VERA_DC_VSCALE  .equ 0x2b
+VERA_DC_BORDER  .equ 0x2c
+
+VERA_DC_HSTART  .equ 0x29
+VERA_DC_HSTOP   .equ 0x2a
+VERA_DC_VSTART  .equ 0x2b
+VERA_DC_VSTOP   .equ 0x2c
+
+VERA_L0_CONFIG   .equ 0x2d
+VERA_L0_MAPBASE  .equ 0x2e
+VERA_L0_TILEBASE .equ 0x2f
+
+VERA_L1_CONFIG   .equ 0x34
+VERA_L1_MAPBASE  .equ 0x35
+VERA_L1_TILEBASE .equ 0x36
+VERA_L1_HSCROL_L .equ 0x37
+VERA_L1_HSCROL_H .equ 0x38
+VERA_L1_VSCROL_L .equ 0x39
+VERA_L1_VSCROL_H .equ 0x3A
+
+
+KMI_DATA        .equ 0x40
+KMI_COMMAND     .equ 0x41
+KMI_STATUS      .equ 0x41
+
+ATARI           .equ 0x60

@@ -1,0 +1,140 @@
+    .include "ports.z80"
+
+NMICounter      .equ 0x8000
+VRAM_TEXT_ADDR  .equ 0x8000
+
+
+    .org 0x0000     ;ROM reset vector, console I/O
+    rla
+    ld (console.Caller+2),a
+    jp console.Caller
+
+    .org 0x0008     ;RST 0X08, keyboard/controller input
+    .org 0x0010     ;RST 0X10, graphics routines
+    jp graphics.Caller
+    .org 0x0018     ;RST 0X18, audio routines
+
+    .org 0x0020     ;RST 0x20, file access
+    .org 0x0028     ;RST 0x28, system routines
+    .org 0x0030     ;RST 0X30, direct I/O
+    .org 0x0038     ;RST 0X38, debug
+    ret
+    .org 0x0066
+nmiHandller:
+    push af
+    push bc
+    push de
+    push hl
+    ; in a,(INT_SOURCE_1)
+    ; call printBin
+    ld a,(NMICounter)
+    inc a
+    OUT (VERA_L1_HSCROL_L),A
+    ld (NMICounter),a
+    ld c,a
+    ld de,0x0500
+    call printBin
+    ld a,0x07
+    out (VERA_ISR),a
+    ld hl,MESSAGE2
+    ld b,13
+    ld de,0x0100
+    call printString
+    out (CLRINT),a
+    out (GOUSR),a
+    pop hl
+    pop de
+    pop bc
+    pop af
+    ret
+
+    .org 0xc0
+pageGadget:     ;B=page number,HL=physical page and attributes,D=target process ID,E=return process ID,destory C
+    
+
+    .org 0x100
+    LD HL,MESSAGE
+    LD B,10
+    ld a,1
+    LD DE,0x0000
+    rst 0x00
+
+    LD HL,MESSAGE
+    LD B,10
+    ld a,1
+    LD DE,0x0300
+    rst 0x00
+infwait:
+    jp infwait
+
+
+printString:            ;B=length, HL=pointer, DE=location
+    ld a,e
+    sla a
+    out (VERA_ADDR_L),a
+    ld a,d
+    add >VRAM_TEXT_ADDR
+    OUT (VERA_ADDR_M),A
+    LD A,0B00100000
+    OUT (VERA_ADDR_H),A
+    .OUTCHAR:
+    ld a,(hl)
+    out (VERA_DATA0),A
+    INC HL
+    DJNZ .OUTCHAR
+    RET
+
+printBin:               ;C=number, DE=location
+    PUSH AF
+    LD A,e
+    sla a
+    out (VERA_ADDR_L),a
+    ld a,d
+    add >VRAM_TEXT_ADDR
+    out (VERA_ADDR_M),A
+    LD A,0B00100000
+    OUT (VERA_ADDR_H),A
+    POP AF
+    ld a,c
+    LD C,VERA_DATA0
+    LD D,8
+    .PRINTBIT:
+    LD B,'1'
+    RLC A
+    JR C,.BIT1
+    LD B,'0'
+    .BIT1:
+    OUT (C),B
+    DEC D
+    JR NZ,.PRINTBIT
+    RET
+
+
+
+console.Caller:
+    push hl
+console1:
+    ld hl,(consoleRoutines)
+    ld (console2+1),hl
+    pop hl
+console2:
+    call 0
+    out (GOUSR),a
+    ret
+unknownCall:
+    ld a,0
+    dec a
+    ret
+
+MESSAGE:
+    .DB 'HELLORLD! '
+MESSAGE2:
+    .DB 'NMI Detected!'
+
+graphics.Caller:
+    .org 0x200
+consoleRoutines:
+    .addr 0
+    .addr printString
+    .addr printBin
+    .blkw (consoleRoutines+512-$)/2,unknownCall

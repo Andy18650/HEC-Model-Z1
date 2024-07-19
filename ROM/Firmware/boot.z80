@@ -1,0 +1,140 @@
+    .include "ports.z80"
+
+VRAM_FONT_ADDR  .equ 0x7000
+VRAM_TEXT_ADDR  .equ 0x8000
+VRAM_TEXT_SIZE  .equ 128*64
+VRAM_L1_ADDR    .equ VRAM_TEXT_ADDR+VRAM_TEXT_SIZE*2
+
+VRAM_TILE_ADDR  .equ 0x0000
+ROMreset:
+    out (GOUSR),a
+    out (GOUSR),a
+
+    .org 0x0066
+    jp VERAinit
+    .org 0x00f0
+ROMComplete:
+    ld sp,0xffff
+    out (RAMEN),a
+    .org 0x100
+
+VERAinit:
+    .waitvera:
+    ld a,0
+    ld i,a
+    ld a,0x24
+    out (VERA_ADDR_L),a
+    in a,(VERA_ADDR_L)
+    cp a,0x24
+    jp nz,.waitvera
+
+    ld a,0b00010001
+    out (VERA_DC_VIDEO),a
+    LD A,32
+    OUT (VERA_DC_HSCALE),A
+    OUT (VERA_DC_VSCALE),A
+    ld a,0b00000001
+    out (VERA_IEN),a
+
+    ld a,0b01100000
+    out (VERA_L0_CONFIG),a
+    ld a,(VRAM_FONT_ADDR>>9)|0b10
+    out (VERA_L0_TILEBASE),a
+    ld a,VRAM_TEXT_ADDR>>9
+    out (VERA_L0_MAPBASE),a
+
+    ld a,0b01100010
+    out (VERA_L1_CONFIG),a
+    ld a,0
+    out (VERA_L1_TILEBASE),a
+    ld a,VRAM_L1_ADDR>>9
+    out (VERA_L1_MAPBASE),a
+
+    ld a,0b00000000
+    out (VERA_CTRL),a
+
+    ld a,<VRAM_FONT_ADDR
+    out (VERA_ADDR_L),a
+    ld a,>VRAM_FONT_ADDR
+    out (VERA_ADDR_M),a
+    ld a,0b00010000
+    out (VERA_ADDR_H),a
+
+    ld bc,0x1000
+    ld hl,font
+    .loadfont:
+    ld a,(hl)
+    out (VERA_DATA0),a
+    inc hl
+    dec c
+    jp nz,.loadfont
+    dec b
+    jp nz,.loadfont
+
+    ld a,<VRAM_TEXT_ADDR
+    out (VERA_ADDR_L),a
+    ld a,>VRAM_TEXT_ADDR
+    out (VERA_ADDR_M),a
+    ld a,0b00010000
+    out (VERA_ADDR_H),a
+    ld bc,VRAM_TEXT_SIZE
+    .fillVRAMl0:
+    ld a,0x00
+    out (VERA_DATA0),a
+    ld a,0x01
+    out (VERA_DATA0),a
+    dec c
+    jp nz,.fillVRAMl0
+    dec b
+    jp nz,.fillVRAMl0
+
+    ld a,<VRAM_L1_ADDR
+    out (VERA_ADDR_L),a
+    ld a,>VRAM_L1_ADDR
+    out (VERA_ADDR_M),a
+    ld a,0b00010000
+    out (VERA_ADDR_H),a
+    ld bc,VRAM_TEXT_SIZE
+    .fillVRAMl1:
+    ld a,0x00
+    out (VERA_DATA0),a
+    ld a,0x00
+    out (VERA_DATA0),a
+    dec c
+    jp nz,.fillVRAMl1
+    dec b
+    jp nz,.fillVRAMl1
+
+RAMinit:
+    ld a,0b10000000         ;process number=0, SYSGATE=1
+    out (PID),a             ;set process ID
+    ld c,PAGEL
+    ld b,0
+    .loadPageL:
+    ld a,b
+    out (c),a
+    inc b
+    jp nz,.loadPageL
+
+    ld c,PAGEH
+    ld b,0
+    ld d,0x70       ;enable everything
+    .loadPageH:
+    out (c),d
+    inc b
+    jp nz,.loadPageH
+
+    ld bc,kernelsize+10    ;32KiB to copy
+    ld de,0         ;source start address
+    ld hl,kernelstart         ;destination start address
+    ldir            ;copy data
+    jp ROMComplete
+
+    .org 0x1000
+kernelstart:
+    .incbin "kernel.bin"
+kernelsize .equ $-kernelstart
+
+    .org 0x7000
+font:
+    .incbin "HEC1FNT.bin"
