@@ -49,21 +49,68 @@ nmiHandller:
     ret
 
     .org 0xc0
-pageGadget:     ;B=page number,HL=physical page and attributes,D=target process ID,E=return process ID,destory C
-    
+pageWriteGadget:     ;B=page number,HL=physical page and attributes,A=target process ID,E=return process ID,destory:C,A
+    out (PID),a
+    ld c,PAGEL
+    out (c),l
+    ld c,PAGEH
+    out (c),h
+    ld a,e
+    out (PID),a
+    ret
+
+pageReadGadget:      ;B=page number,A=target process ID,E=return process ID,destory:C,A,return: HL=physical page and attributes
+    out (PID),a
+    ld c,PAGEL
+    in l,(c)
+    ld c,PAGEH
+    in h,(c)
+    ld a,e
+    out (PID),a
+    ret
+
+memWriteGadget:     ;HL=target address,C=value to be written to (HL) at target process,A=target process ID,E=return process ID
+    out (PID),a
+    ld (hl),c
+    ld a,e
+    out (PID),a
+    ret
+
+memReadGadget:     ;HL=target address,A=target process ID,E=return process ID,return: C=value at (HL) in target process
+    out (PID),a
+    ld c,(hl)
+    ld a,e
+    out (PID),a
+    ret
 
     .org 0x100
+kernelStart:
     LD HL,MESSAGE
     LD B,10
     ld a,1
     LD DE,0x0000
     rst 0x00
 
-    LD HL,MESSAGE
-    LD B,10
+    ld hl,message3
+    ld b,14
     ld a,1
-    LD DE,0x0300
+    ld de,0x0512
     rst 0x00
+    
+    rst 0x38
+    ld b,0x42
+    ld a,0x82
+    ld e,0x80
+    ld hl,0x70c5
+    call pageWriteGadget
+    ld b,0x42
+    ld a,0x82
+    ld e,0x80
+    call pageReadGadget
+    ld c,l
+    ld de,0x0612
+    call printBin
+    out (GOUSR),a
 infwait:
     jp infwait
 
@@ -130,6 +177,9 @@ MESSAGE:
     .DB 'HELLORLD! '
 MESSAGE2:
     .DB 'NMI Detected!'
+
+message3:
+    .db 'this is a test'
 
 graphics.Caller:
     .org 0x200
