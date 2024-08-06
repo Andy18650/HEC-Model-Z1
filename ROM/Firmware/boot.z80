@@ -14,7 +14,7 @@ ROMreset:
     jp VERAinit
     .org 0x00f0
 ROMComplete:
-    ld sp,0xffff
+    ld sp,0xff00
     out (RAMEN),a
     .org 0x100
 
@@ -28,9 +28,12 @@ VERAinit:
     cp a,0x24
     jp nz,.waitvera
 
+    ld a,1
+    ld i,a
+
     ld a,0b00010001
     out (VERA_DC_VIDEO),a
-    LD A,32
+    LD A,64
     OUT (VERA_DC_HSCALE),A
     OUT (VERA_DC_VSCALE),A
     ld a,0b00000001
@@ -106,7 +109,9 @@ VERAinit:
     jp nz,.fillVRAMl1
 
 RAMinit:
-    ld a,0b10000000         ;process number=0, SYSGATE=1
+    ld l,0b10000000         ;process number=0, SYSGATE=1
+initProcessPages:
+    ld a,l
     out (PID),a             ;set process ID
     ld c,PAGEL
     ld b,0
@@ -123,6 +128,10 @@ RAMinit:
     out (c),d
     inc b
     jp nz,.loadPageH
+    inc l
+    jp nz,initProcessPages
+    ld a,0b10000000
+    out (PID),a
 
     ld bc,kernelsize+10    ;32KiB to copy
     ld de,0         ;source start address
