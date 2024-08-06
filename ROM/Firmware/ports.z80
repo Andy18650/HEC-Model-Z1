@@ -41,6 +41,8 @@ VERA_L1_HSCROL_H .equ 0x38
 VERA_L1_VSCROL_L .equ 0x39
 VERA_L1_VSCROL_H .equ 0x3A
 
+VERA_SPI_DATA   .equ 0x3e
+VERA_SPI_CTRL   .equ 0x3f
 
 KMI_DATA        .equ 0x40
 KMI_COMMAND     .equ 0x41

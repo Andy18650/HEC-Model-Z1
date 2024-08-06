@@ -10,13 +10,14 @@ ROMreset:
     out (GOUSR),a
     out (GOUSR),a
 
-    .org 0x0066
+    .reserve 0x66-$
     jp VERAinit
-    .org 0x00f0
+    .reserve 0xf8-$
 ROMComplete:
-    ld sp,0xff00
+    ld hl,0xf800
+    ld sp,hl
     out (RAMEN),a
-    .org 0x100
+    .reserve 0x100-$
 
 VERAinit:
     .waitvera:
@@ -39,6 +40,9 @@ VERAinit:
     ld a,0b00000001
     out (VERA_IEN),a
 
+    ld a,2
+    ld i,a
+
     ld a,0b01100000
     out (VERA_L0_CONFIG),a
     ld a,(VRAM_FONT_ADDR>>9)|0b10
@@ -53,6 +57,9 @@ VERAinit:
     ld a,VRAM_L1_ADDR>>9
     out (VERA_L1_MAPBASE),a
 
+    ld a,3
+    ld i,a
+
     ld a,0b00000000
     out (VERA_CTRL),a
 
@@ -63,6 +70,9 @@ VERAinit:
     ld a,0b00010000
     out (VERA_ADDR_H),a
 
+    ld a,4
+    ld i,a
+    
     ld bc,0x1000
     ld hl,font
     .loadfont:
@@ -74,6 +84,9 @@ VERAinit:
     dec b
     jp nz,.loadfont
 
+    ld a,5
+    ld i,a
+    
     ld a,<VRAM_TEXT_ADDR
     out (VERA_ADDR_L),a
     ld a,>VRAM_TEXT_ADDR
@@ -91,6 +104,9 @@ VERAinit:
     dec b
     jp nz,.fillVRAMl0
 
+    ld a,6
+    ld i,a
+    
     ld a,<VRAM_L1_ADDR
     out (VERA_ADDR_L),a
     ld a,>VRAM_L1_ADDR
@@ -108,6 +124,16 @@ VERAinit:
     dec b
     jp nz,.fillVRAMl1
 
+
+
+    ld a,0b00000010
+    out (VERA_SPI_CTRL),a
+
+
+
+
+    ld a,7
+    ld i,a
 RAMinit:
     ld l,0b10000000         ;process number=0, SYSGATE=1
 initProcessPages:
@@ -130,6 +156,10 @@ initProcessPages:
     jp nz,.loadPageH
     inc l
     jp nz,initProcessPages
+
+    ld a,7
+    ld i,a
+
     ld a,0b10000000
     out (PID),a
 
@@ -137,12 +167,15 @@ initProcessPages:
     ld de,0         ;source start address
     ld hl,kernelstart         ;destination start address
     ldir            ;copy data
+
+    ld a,8
+    ld i,a
+    
     jp ROMComplete
 
     .org 0x1000
 kernelstart:
-    .incbin "kernel.bin"
-kernelsize .equ $-kernelstart
+    .include "kernel.z80"
 
     .org 0x7000
 font:

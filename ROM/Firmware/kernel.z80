@@ -1,66 +1,114 @@
-    .include "ports.z80"
 
-NMICounter      .equ 0x8000
-NMICounter2     .equ 0x8001
-NMISubCounter   .equ 0x8002
+; NMICounter      .equ 0x8000
+; NMICounter2     .equ 0x8001
+; NMISubCounter   .equ 0x8002
 
 thisPID         .equ 0xff1d
 nextPID         .equ 0xff1e
 backsp          .equ 0xff1c
 
-VRAM_TEXT_ADDR  .equ 0x8000
-
-
-    .org 0x0000     ;ROM reset vector, console I/O
+    .rorg 0x0000     ;ROM reset vector, console I/O
     rla
-    ld (console.Caller+2),a
-    jp console.Caller
-
-    .org 0x0008     ;RST 0X08, keyboard/controller input
-    .org 0x0010     ;RST 0X10, graphics routines
-    jp graphics.Caller
-    .org 0x0018     ;RST 0X18, audio routines
-
-    .org 0x0020     ;RST 0x20, file access
-    .org 0x0028     ;RST 0x28, system routines
-    .org 0x0030     ;RST 0X30, direct I/O
-    .org 0x0038     ;RST 0X38, debug
+    ld (console_Caller+1),a
+    push hl
+    jp console_Caller
+    ;RST 0X08, keyboard/controller input
+    rla
+    ld (input_Caller+1),a
+    push hl
+    jp input_Caller
+    ;RST 0X10, graphics routines
+    rla
+    ld (graphics_Caller+1),a
+    push hl
+    jp graphics_Caller
+    ;RST 0X18, sound routines
+    rla
+    ld (sound_Caller+1),a
+    push hl
+    jp sound_Caller
+    ;RST 0x20, file routines
+    rla
+    ld (file_Caller+1),a
+    push hl
+    jp file_Caller
+    ;RST 0x28, service routines
+    rla
+    ld (service_Caller+1),a
+    push hl
+    jp service_Caller
+    ;RST 0x30, I/O routines
+    ld c,0xff
+    bit 0,c
+    out (GOUSR),a
     ret
-    .org 0x0066
+    nop
+    ;RST 0x38, debug
+    ret
+
+    .reserve 0x46-$
+farCallGadget:      ;A'=return PID,A=target PID，HL=target address, parameters passed in BC',DE',HL'
+    ld (backsp),sp
+    out (PID),a
+    ld sp,(backsp)
+    push hl
+    ld hl,.returnAddr
+    ex (sp),hl
+    push hl
+    exx
+    ret
+    .returnAddr:
+    ex af,af'
+    ld (backsp),sp
+    out (PID),a
+    ld sp,(backsp)
+    exx
+    ret
+    .reserve 0x66-$
 nmiHandller:
     push af
+    in a,(INT_SOURCE_1)
+    or 0x0f
+    inc a
+    jp nz,exceptionHandler
     push bc
     push de
     push hl
-    ; in a,(INT_SOURCE_1)
-    ; call printBin
-    ; ld a,(NMISubCounter)
-    ; inc a
-    ; ld (NMISubCounter),a
-    ; cp 60
-    ; jr nz,.nmiexit
-    ; ld a,0
-    ; ld (NMISubCounter),a
-    ; ld hl,(NMICounter)
-    ; inc hl
-    ; ld (NMICounter),hl
-    ; ld c,h
-    ; ld de,0x0100
-    ; call printBin
-    ; ld c,l
-    ; ld de,0x0108
-    ; call printBin
-    ; .nmiexit:
-    ; ld a,0x07
-    ; out (VERA_ISR),a
+    ex af,af'
+    exx
+    push af
+    push bc
+    push de
+    ; push hl
+    push ix
+    push iy
+    inc hl
+    ld c,h
+    ld de,0x0300
+    call printBin
+    ld c,l
+    ld de,0x0308
+    call printBin
+    ld a,0x07
+    out (VERA_ISR),a
+    pop iy
+    pop ix
+    ; pop hl
+    pop de
+    pop bc
+    pop af
+    exx
+    ex af,af'
     pop hl
     pop de
     pop bc
+exceptionReturn:
     pop af
     out (CLRINT),a
     out (GOUSR),a
     ret
 
+    .reserve 0xb0-$
 pageWriteGadget:     ;B=page number,HL=physical page and attributes,A=target process ID,E=return process ID,destory:C,A
     out (PID),a
     ld c,PAGEL
@@ -95,114 +143,118 @@ memReadGadget:     ;HL=target address,A=target process ID,E=return process ID,re
     out (PID),a
     ret
 
-farCallGadget:      ;A'=return PID,A=target PID，HL=target address, parameters passed in BC',DE',HL'
-    ld (backsp),sp
-    out (PID),a
-    ld sp,(backsp)
-    push hl
-    ld hl,.returnAddr
-    ex (sp),hl
-    push hl
-    exx
-    ret
-    .returnAddr:
-    ex af,af'
-    ld (backsp),sp
-    out (PID),a
-    ld sp,(backsp)
-    exx
-    ret
-
-taskSwitchGadget:
-    push bc
-    push de
-    push hl
-    ex af,af'
-    exx
-    push af
-    push bc
-    push de
-    push hl
-    push ix
-    push iy
-    ld (backsp),sp
-    ex af,af'
-    out (PID),a
-    ld sp,(backsp),sp
-    pop iy
-    pop ix
-    pop hl
-    pop de
-    pop bc
-    pop af
-    exx
-    ex af,af'
-    pop hl
-    pop de
-    pop bc
-    ret
-
-    .org 0x100
+    .reserve 0x100-$
 kernelStart:
     LD HL,MESSAGE
     LD B,10
     ld a,1
     LD DE,0x0000
     rst 0x00
-
     rst 0x38
-    ld b,0x42
-    ld a,0x82
-    ld e,0x80
-    ld hl,0x70c5
-    call pageWriteGadget
-    ld b,0x42
-    ld a,0x82
-    ld e,0x80
-    call pageReadGadget
-    ld c,l
-    ld de,0x0612
-    call printBin
-    ld a,0xf0
-    ld (NMICounter),a
 
-    ld hl,0x8086
-    ld de,testPayload
-    ld b,10
-injectCode:
-    ld a,(de)
-    ld c,a
-    push de
-    ld a,0x81
-    ld e,0x80
-    call memWriteGadget
-    pop de
-    inc de
-    inc hl
-    djnz injectCode
-    ld a,0x81
-    ld e,0x80
-    ld hl,0x808d
-    call memReadGadget
-    ld de,0x0712
-    call printBin
+    .macro waitspi
+    .waitspiloop\@:
+        in a,(VERA_SPI_CTRL)
+        and 0b10000000
+        jr nz,.waitspiloop\@
+    .endm
+    ld b,15
+    ld a,0xff
+initSD:
+    out (VERA_SPI_DATA),a
+    waitspi
+    djnz initSD
+    ld a,0b00000011
+    out (VERA_SPI_CTRL),a
+    ld a,0x40
+    out (VERA_SPI_DATA),a
+    waitspi
+    ld a,0
+    out (VERA_SPI_DATA),a
+    waitspi
+    ld a,0
+    out (VERA_SPI_DATA),a
+    waitspi
+    ld a,0
+    out (VERA_SPI_DATA),a
+    waitspi
+    ld a,0
+    out (VERA_SPI_DATA),a
+    waitspi
+    ld a,0x95
+    out (VERA_SPI_DATA),a
+    waitspi
 
-farcalltest:
-    ld a,0x80
-    ex af,af'
+waitr1:
+    ld a,0xff
+    out (VERA_SPI_DATA),a
+    waitspi
+    in a,(VERA_SPI_DATA)
+    and 0x80
     push af
-    ld a,0x81
-    exx
-    push hl
-    ld hl,0x8086
-    call farCallGadget
-    pop hl
-    exx
-    pop af
-    ex af,af'
-    ld de,0x0813
+    ld c,a
+    ld de,0x0100
     call printBin
+    pop af
+    jp z,waitr1
+    ld a,9
+    ld i,a
 
+    ld a,0b00000010
+    out (VERA_SPI_CTRL),a
+
+    ; ld b,0x42
+    ; ld a,0x82
+    ; ld e,0x80
+    ; ld hl,0x70c5
+    ; call pageWriteGadget
+    ; ld b,0x42
+    ; ld a,0x82
+    ; ld e,0x80
+    ; call pageReadGadget
+    ; ld c,l
+    ; ld de,0x0612
+    ; call printBin
+
+;     ld hl,0x8086
+;     ld de,testPayload
+;     ld b,10
+; injectCode:
+;     ld a,(de)
+;     ld c,a
+;     push de
+;     ld a,0x81
+;     ld e,0x80
+;     call memWriteGadget
+;     pop de
+;     inc de
+;     inc hl
+;     djnz injectCode
+
+; farcalltest:
+;     ld a,0x80
+;     ex af,af'
+;     push af
+;     ld a,0x81
+;     exx
+;     push hl
+;     ld hl,0x8086
+;     call farCallGadget
+;     pop hl
+;     exx
+;     pop af
+;     ex af,af'
+;     ld de,0x0813
+;     call printBin
+; pidtest:
+    ; ld a,2
+    ; ld r,a
+    ; out (PID),a
+    ; in a,(0x02)
+    ; ld c,a
+    ; ld de,0x0b12
+    ; call printBin
+    ; jp pidtest
 testend:
     out (GOUSR),a
 infwait:
@@ -223,10 +275,11 @@ printString:            ;B=length, HL=pointer, DE=location
     out (VERA_DATA0),A
     INC HL
     DJNZ .OUTCHAR
+    ld c,0              ;TODO Change to A
+    and c
     RET
 
-printBin:               ;C=number, DE=location
-    PUSH AF
+printBin:               ;C=number, DE=location  ;destroys e
     LD A,e
     sla a
     out (VERA_ADDR_L),a
@@ -235,37 +288,78 @@ printBin:               ;C=number, DE=location
     out (VERA_ADDR_M),A
     LD A,0B00100000
     OUT (VERA_ADDR_H),A
-    POP AF
     ld a,c
     LD C,VERA_DATA0
-    LD D,8
+    LD b,8
     .PRINTBIT:
-    LD B,'1'
+    LD e,'1'
     RLC A
     JR C,.BIT1
-    LD B,'0'
+    LD e,'0'
     .BIT1:
-    OUT (C),B
-    DEC D
-    JR NZ,.PRINTBIT
+    OUT (C),e
+    djnz .PRINTBIT
+    ld c,0              ;TODO Change to A
+    and c
     RET
 
-
-
-console.Caller:
+loadTile:               ;E=tile Number, HL=tile information
+    push bc
+    push de
     push hl
-console1:
-    ld hl,(consoleRoutines)
-    ld (console2+1),hl
+    sla e
+    rl d
+    sla e
+    rl d
+    sla e
+    rl d
+    sla e
+    rl d
+    sla e
+    rl d
+    ld a,e
+    out (VERA_ADDR_L),a
+    ld a,d
+    out (VERA_ADDR_M),a
+    ld a,0x10
+    out (VERA_ADDR_H),a
+    ld b,32
+    .loop:
+    ld a,(hl)
+    rlca
+    rlca
+    rlca
+    rlca
+    out (VERA_DATA0),a
+    inc hl
+    djnz .loop
     pop hl
-console2:
-    call 0
-    out (GOUSR),a
+    pop de
+    pop bc
+    ld c,00              ;TODO Change to A
+    and c
     ret
+
 unknownCall:
     ld a,0
     dec a
     ret
+
+console_Caller:
+    ld hl,(consoleRoutines)
+    ld ($+5),hl
+    pop hl
+    call 0
+    out (GOUSR),a
+    ret
+input_Caller:
+graphics_Caller:
+sound_Caller:
+file_Caller:
+service_Caller:
+io_Caller:
+
+
 
 testPayload:
     ld a,0x55
@@ -277,11 +371,26 @@ testPayload:
 MESSAGE:
     .DB 'HELLORLD! '
 
-graphics.Caller:
-    .org 0x200
+exceptionHandler:
+    jp exceptionReturn
+    .reserve 0x300-$
 consoleRoutines:
     .addr 0
     .addr printString
     .addr printBin
     .blkw (consoleRoutines+512-$)/2,unknownCall
-    .db testend-farcalltest
+graphics_Routines:
+    .addr 0
+    .addr printString
+    .addr printBin
+    .blkw (graphics_Routines+512-$)/2,unknownCall
+sound_Routines:
+    .addr 0
+    .blkw (sound_Routines+512-$)/2,unknownCall
+file_Routines:
+    .addr 0
+    .blkw (file_Routines+512-$)/2,unknownCall
+service_Routines:
+    .addr 0
+    .blkw (service_Routines+512-$)/2,unknownCall
+kernelsize:
