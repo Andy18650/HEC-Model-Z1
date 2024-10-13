@@ -3742,310 +3742,6 @@
 				)
 			)
 		)
-		(symbol "Device:C"
-			(pin_numbers hide)
-			(pin_names
-				(offset 0.254)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "C"
-				(at 0.635 2.54 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Value" "C"
-				(at 0.635 -2.54 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Footprint" ""
-				(at 0.9652 -3.81 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "~"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "Unpolarized capacitor"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "cap capacitor"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_fp_filters" "C_*"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "C_0_1"
-				(polyline
-					(pts
-						(xy -2.032 -0.762) (xy 2.032 -0.762)
-					)
-					(stroke
-						(width 0.508)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy -2.032 0.762) (xy 2.032 0.762)
-					)
-					(stroke
-						(width 0.508)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "C_1_1"
-				(pin passive line
-					(at 0 3.81 270)
-					(length 2.794)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 0 -3.81 90)
-					(length 2.794)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-		)
-		(symbol "Device:Crystal"
-			(pin_numbers hide)
-			(pin_names
-				(offset 1.016) hide)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "Y"
-				(at 0 3.81 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Value" "Crystal"
-				(at 0 -3.81 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "~"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "Two pin crystal"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "quartz ceramic resonator oscillator"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_fp_filters" "Crystal*"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "Crystal_0_1"
-				(rectangle
-					(start -1.143 2.54)
-					(end 1.143 -2.54)
-					(stroke
-						(width 0.3048)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy -2.54 0) (xy -1.905 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy -1.905 -1.27) (xy -1.905 1.27)
-					)
-					(stroke
-						(width 0.508)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 1.905 -1.27) (xy 1.905 1.27)
-					)
-					(stroke
-						(width 0.508)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 2.54 0) (xy 1.905 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "Crystal_1_1"
-				(pin passive line
-					(at -3.81 0 0)
-					(length 1.27)
-					(name "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 3.81 0 180)
-					(length 1.27)
-					(name "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-		)
 		(symbol "Device:NetTie_2"
 			(pin_numbers hide)
 			(pin_names
@@ -6763,18 +6459,6 @@
 		(uuid "335466fb-cb25-465b-8dac-8989be791d19")
 	)
 	(junction
-		(at 195.58 101.6)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "4015cae5-b6ba-478d-91ae-4051f4c966fe")
-	)
-	(junction
-		(at 182.88 109.22)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "4c2c9325-c3a0-4bef-9870-2513a6a5c6fc")
-	)
-	(junction
 		(at 140.97 158.75)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -6821,12 +6505,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "bd75b9d0-36f3-4692-b152-5f62eb16102f")
-	)
-	(junction
-		(at 195.58 109.22)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "cd257ecc-5a57-4c99-92cf-67162a127718")
 	)
 	(junction
 		(at 128.27 173.99)
@@ -7031,6 +6709,16 @@
 			(type default)
 		)
 		(uuid "1c3dad77-7e9e-4eee-bdd1-dfc9c83ea73f")
+	)
+	(wire
+		(pts
+			(xy 200.66 109.22) (xy 203.2 109.22)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1d901efe-5665-4c54-a0a9-866eb0193c53")
 	)
 	(wire
 		(pts
@@ -7314,16 +7002,6 @@
 	)
 	(wire
 		(pts
-			(xy 190.5 109.22) (xy 195.58 109.22)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "52320f51-a17f-4767-a05c-ccf01afe29fa")
-	)
-	(wire
-		(pts
 			(xy 41.91 53.34) (xy 41.91 60.96)
 		)
 		(stroke
@@ -7331,16 +7009,6 @@
 			(type default)
 		)
 		(uuid "52b6c360-bbca-4d65-b5da-62fde3b87f95")
-	)
-	(wire
-		(pts
-			(xy 195.58 101.6) (xy 203.2 101.6)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5403e270-49bf-4880-8e83-b078c4b02f6c")
 	)
 	(wire
 		(pts
@@ -7391,16 +7059,6 @@
 			(type default)
 		)
 		(uuid "5f0e5e49-1b59-4474-9b63-f6185cf1d2ef")
-	)
-	(wire
-		(pts
-			(xy 182.88 109.22) (xy 182.88 113.03)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "607e250f-0e7d-4cd4-8007-73eb2835be51")
 	)
 	(wire
 		(pts
@@ -7694,16 +7352,6 @@
 	)
 	(wire
 		(pts
-			(xy 195.58 109.22) (xy 203.2 109.22)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "943b1a37-d46b-4011-ac02-5c75d2b10e37")
-	)
-	(wire
-		(pts
 			(xy 270.51 88.9) (xy 270.51 97.79)
 		)
 		(stroke
@@ -7844,6 +7492,16 @@
 	)
 	(wire
 		(pts
+			(xy 182.88 101.6) (xy 203.2 101.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ad096dec-7cf1-446d-aebf-47be91646a03")
+	)
+	(wire
+		(pts
 			(xy 179.07 88.9) (xy 180.34 88.9)
 		)
 		(stroke
@@ -7921,16 +7579,6 @@
 			(type default)
 		)
 		(uuid "bff64c4f-7889-4bd1-b01e-56f7d8096309")
-	)
-	(wire
-		(pts
-			(xy 190.5 101.6) (xy 195.58 101.6)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c313f5bb-d4f7-482d-965d-e37c7e45ff1c")
 	)
 	(wire
 		(pts
@@ -8174,7 +7822,7 @@
 	)
 	(wire
 		(pts
-			(xy 182.88 101.6) (xy 182.88 109.22)
+			(xy 182.88 101.6) (xy 182.88 113.03)
 		)
 		(stroke
 			(width 0)
@@ -9282,6 +8930,28 @@
 		)
 		(uuid "f6ce4858-af35-4eff-a7b7-7779e59b5f70")
 	)
+	(global_label "CLK12M"
+		(shape input)
+		(at 200.66 109.22 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "09297f20-1c2b-4ad2-8861-ff44bc874b94")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 190.2363 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
+	)
 	(hierarchical_label "~{IO_CS1}"
 		(shape input)
 		(at 22.86 38.1 180)
@@ -9643,75 +9313,6 @@
 			(project "HEC1"
 				(path "/87935374-b60a-4f41-99da-94b76103dd77/b96e4e19-77bb-438e-a98c-e547a5bf0bc4"
 					(reference "#PWR0116")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C")
-		(at 186.69 101.6 90)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "0852fc90-157a-4159-9547-5fc8bd0bcf60")
-		(property "Reference" "C31"
-			(at 186.69 95.25 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "C"
-			(at 186.69 97.79 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Capacitor_THT:C_Disc_D3.4mm_W2.1mm_P2.50mm"
-			(at 190.5 102.5652 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 186.69 101.6 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Unpolarized capacitor"
-			(at 186.69 101.6 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "d66fb2dc-67c2-48c6-a8a8-f7355d7569cb")
-		)
-		(pin "2"
-			(uuid "c631f2fc-bb41-46cc-921c-091ce40a0ec4")
-		)
-		(instances
-			(project "HEC1"
-				(path "/87935374-b60a-4f41-99da-94b76103dd77/b96e4e19-77bb-438e-a98c-e547a5bf0bc4"
-					(reference "C31")
 					(unit 1)
 				)
 			)
@@ -10972,75 +10573,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:Crystal")
-		(at 195.58 105.41 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "518e3245-289c-4102-9f48-d00e5cb2f4f6")
-		(property "Reference" "Y1"
-			(at 200.025 104.775 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "Crystal"
-			(at 200.025 107.315 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Crystal:Crystal_HC18-U_Vertical"
-			(at 195.58 105.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 195.58 105.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Two pin crystal"
-			(at 195.58 105.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "247695b6-a7d2-4e45-9317-b28a1181d8df")
-		)
-		(pin "2"
-			(uuid "8b306257-6157-4eb9-a2f1-a632d3b0c8c1")
-		)
-		(instances
-			(project "HEC1"
-				(path "/87935374-b60a-4f41-99da-94b76103dd77/b96e4e19-77bb-438e-a98c-e547a5bf0bc4"
-					(reference "Y1")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "74xx:74LS06")
 		(at 260.35 97.79 0)
 		(unit 5)
@@ -11631,73 +11163,6 @@
 			(project "HEC1"
 				(path "/87935374-b60a-4f41-99da-94b76103dd77/b96e4e19-77bb-438e-a98c-e547a5bf0bc4"
 					(reference "#PWR0126")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C")
-		(at 186.69 109.22 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "6c488669-fba3-489d-be2a-8ada8bfc6495")
-		(property "Reference" "C32"
-			(at 186.69 113.03 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "C"
-			(at 186.69 115.57 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Capacitor_THT:C_Disc_D3.4mm_W2.1mm_P2.50mm"
-			(at 190.5 108.2548 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 186.69 109.22 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Unpolarized capacitor"
-			(at 186.69 109.22 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "1fa186ab-6e70-4b75-a992-7264f01c5155")
-		)
-		(pin "2"
-			(uuid "8a377f5c-3a8f-4f90-8495-407da4b51486")
-		)
-		(instances
-			(project "HEC1"
-				(path "/87935374-b60a-4f41-99da-94b76103dd77/b96e4e19-77bb-438e-a98c-e547a5bf0bc4"
-					(reference "C32")
 					(unit 1)
 				)
 			)
